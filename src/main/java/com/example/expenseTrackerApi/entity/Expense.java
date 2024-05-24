@@ -1,6 +1,9 @@
 package com.example.expenseTrackerApi.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,15 +26,20 @@ public class Expense {
     private Long id;
 
     @Column(name="expense_name")
+    @Size(min=3 ,message = "Expense name must be atleast three characters")
+    @NotBlank(message = "Expense name cannot be null,empty or blank")
     private String name;
 
     private String description;
 
     @Column(name="expense_amount")
+    @NotNull(message = "Expense amount is necessary field")
     private BigDecimal amount;
 
+    @NotBlank(message = "Expense category cannot be null,empty or blank")
     private String category;
 
+    @NotNull(message="Date cannot be null")
     private Date date;
 
     @Column(name="created_time",nullable = false,updatable = false)
