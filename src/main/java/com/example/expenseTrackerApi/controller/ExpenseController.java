@@ -2,6 +2,7 @@ package com.example.expenseTrackerApi.controller;
 
 import com.example.expenseTrackerApi.entity.Expense;
 import com.example.expenseTrackerApi.service.ExpenseServiceImpel;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class ExpenseController {
 
     @ResponseStatus(value= HttpStatus.CREATED)
     @PostMapping("/expenses")
-    public Expense saveExpense(@RequestBody Expense expense)
+    public Expense saveExpense(@Valid @RequestBody Expense expense)
     {
         return expenseServiceImpel.saveExpenseDetails(expense);
     }
