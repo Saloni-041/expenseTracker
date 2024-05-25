@@ -11,8 +11,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -40,6 +40,7 @@ public class Expense {
     private String category;
 
     @NotNull(message="Date cannot be null")
+    //here Date is of sql package not util package
     private Date date;
 
     @Column(name="created_time",nullable = false,updatable = false)
