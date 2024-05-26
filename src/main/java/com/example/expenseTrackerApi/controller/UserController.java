@@ -16,28 +16,28 @@ public class UserController {
     @Autowired
     private UserServiceImpel userServiceImpel;
 
-    @PostMapping("/register")
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserModel userModel)
+//    @PostMapping("/register")
+//    public ResponseEntity<User> createUser(@Valid @RequestBody UserModel userModel)
+//    {
+//        return new ResponseEntity<>(userServiceImpel.createUser(userModel), HttpStatus.CREATED);
+//    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> readUser()
     {
-        return new ResponseEntity<>(userServiceImpel.createUser(userModel), HttpStatus.CREATED);
+        return new ResponseEntity<>(userServiceImpel.readUser(), HttpStatus.OK);
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<User> readUser(@PathVariable Long id)
+    @PutMapping("/profile")
+    public ResponseEntity<User> updateUser(@RequestBody UserModel userModel)
     {
-        return new ResponseEntity<>(userServiceImpel.readUser(id), HttpStatus.OK);
+        return new ResponseEntity<User>(userServiceImpel.updateUser(userModel),HttpStatus.OK);
     }
 
-    @PutMapping("users/{id}")
-    public ResponseEntity<User> updateUser(@RequestBody UserModel userModel,@PathVariable Long id)
+    @DeleteMapping("/deactivate")
+    public ResponseEntity<HttpStatus> deleteUser() throws ResourceNotFoundException
     {
-        return new ResponseEntity<User>(userServiceImpel.updateUser(userModel,id),HttpStatus.OK);
-    }
-
-    @DeleteMapping("users/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id) throws ResourceNotFoundException
-    {
-        userServiceImpel.delete(id);
+        userServiceImpel.delete();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
