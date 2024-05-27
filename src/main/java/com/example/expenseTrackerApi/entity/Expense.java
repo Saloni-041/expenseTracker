@@ -1,5 +1,6 @@
 package com.example.expenseTrackerApi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -50,5 +53,12 @@ public class Expense {
     @Column(name="lastmodifiedtime")
     @UpdateTimestamp
     private Timestamp updatedTime;
+
+    //The FetchType.LAZY strategy is used to optimize performance by deferring the loading of the associated entity until it is actually needed.
+    @ManyToOne(fetch=FetchType.LAZY,optional = false)
+    @JoinColumn(name="user_id",nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)    //when user is deleted expenses should also be deleted
+    @JsonIgnore                                  //when we are fetching expense we are not going to fetch user
+    private User user;
 
 }
