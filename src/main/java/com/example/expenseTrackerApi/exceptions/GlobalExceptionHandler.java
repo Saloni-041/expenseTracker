@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 //It internally uses component annotation as soon as app runs spring will create object of this class
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 {
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -53,7 +53,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
 //    When a request with invalid arguments (as per the validation annotations) is received, this method constructs a detailed error response
-//    This exception occurs when validation on an argument annotated with @Valid fails
+//    This exception occurs when validation on an argument annotated with @Valid fails we have annotated expense controller
+//    saveExpense with @Valid annotation and in expense model class we have annotations like notnull etc if these are not followed then
+//    it will throw the below exception
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String,Object> map=new HashMap<>();
         map.put("timestamp",new Date());
