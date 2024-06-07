@@ -20,58 +20,53 @@ import java.util.stream.Collectors;
 
 //It internally uses component annotation as soon as app runs spring will create object of this class
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
-{
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorObject> handleExpenseNotFoundException(ResourceNotFoundException ex, WebRequest request)
-    {
-        ErrorObject object=new ErrorObject();
+    public ResponseEntity<ErrorObject> handleExpenseNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        ErrorObject object = new ErrorObject();
         object.setStatusCode(HttpStatus.NOT_FOUND.value());
         object.setMessage(ex.getMessage());
         object.setTimeStamp(new Date());
-        return new ResponseEntity<ErrorObject>(object,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<ErrorObject>(object, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorObject> handleException(MethodArgumentTypeMismatchException ex,WebRequest request)
-    {
-        ErrorObject errorObject=new ErrorObject();
+    public ResponseEntity<ErrorObject> handleException(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        ErrorObject errorObject = new ErrorObject();
         errorObject.setStatusCode(HttpStatus.BAD_REQUEST.value());
         errorObject.setMessage(ex.getMessage());
         errorObject.setTimeStamp(new Date());
-        return new ResponseEntity<ErrorObject>(errorObject,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorObject> handleGeneralException(Exception ex,WebRequest request)
-    {
-        ErrorObject errorObject=new ErrorObject();
+    public ResponseEntity<ErrorObject> handleGeneralException(Exception ex, WebRequest request) {
+        ErrorObject errorObject = new ErrorObject();
         errorObject.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorObject.setMessage(ex.getMessage());
         errorObject.setTimeStamp(new Date());
-        return new ResponseEntity<ErrorObject>(errorObject,HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<ErrorObject>(errorObject, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-//    When a request with invalid arguments (as per the validation annotations) is received, this method constructs a detailed error response
+    //    When a request with invalid arguments (as per the validation annotations) is received, this method constructs a detailed error response
 //    This exception occurs when validation on an argument annotated with @Valid fails we have annotated expense controller
 //    saveExpense with @Valid annotation and in expense model class we have annotations like notnull etc if these are not followed then
 //    it will throw the below exception
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        Map<String,Object> map=new HashMap<>();
-        map.put("timestamp",new Date());
-        map.put("statusCode",status.value());
-        List<String> errors=ex.getBindingResult().getFieldErrors().stream().map(x->x.getDefaultMessage()).collect(Collectors.toList());
-        map.put("errors",errors);
-        return new ResponseEntity<>(map,status);
+        Map<String, Object> map = new HashMap<>();
+        map.put("timestamp", new Date());
+        map.put("statusCode", status.value());
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream().map(x -> x.getDefaultMessage()).collect(Collectors.toList());
+        map.put("errors", errors);
+        return new ResponseEntity<>(map, status);
     }
 
     @ExceptionHandler(ItemAlreadyExistsException.class)
-    public ResponseEntity<Object> handleItemExistsException(ItemAlreadyExistsException itemAlreadyExistsException,WebRequest webRequest)
-    {
-        ErrorObject errorObject=new ErrorObject();
+    public ResponseEntity<Object> handleItemExistsException(ItemAlreadyExistsException itemAlreadyExistsException, WebRequest webRequest) {
+        ErrorObject errorObject = new ErrorObject();
         errorObject.setTimeStamp(new Date());
         errorObject.setMessage(itemAlreadyExistsException.getMessage());
         errorObject.setStatusCode(HttpStatus.CONFLICT.value());
-        return new ResponseEntity<Object>(errorObject,HttpStatus.CONFLICT);
+        return new ResponseEntity<Object>(errorObject, HttpStatus.CONFLICT);
     }
 }

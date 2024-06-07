@@ -10,21 +10,20 @@ import java.sql.Date;
 import java.util.Optional;
 
 @Repository
-public interface ExpenseRepository extends JpaRepository<Expense, Long>
-{
+public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     //all these are data jpa finder/query methods
     // select * from tbl_expenses where usr_id=? and category=?
-    public Page<Expense> findByUserIdAndCategory(Long userId,String category, Pageable page);
+    public Page<Expense> findByUserIdAndCategory(Long userId, String category, Pageable page);
 
     // select * from tbl_expenses where user_id=? and name like '%keyword%'
     // here containing keyword is used to apply like clause
-    public Page<Expense> findByUserIdAndNameContaining(Long userId,String name,Pageable page);
+    public Page<Expense> findByUserIdAndNameContaining(Long userId, String name, Pageable page);
 
     // select * from tbl_expenses where user_id=? and date between 'startdate' and 'enddate'
-    public Page<Expense> findByUserIdAndDateBetween(Long userId,Date startDate,Date endDate,Pageable page);
+    public Page<Expense> findByUserIdAndDateBetween(Long userId, Date startDate, Date endDate, Pageable page);
 
     //select * from tbl_expenses where user_id=?
-    Page<Expense> findByUserId(Long userId,Pageable page);
+    Page<Expense> findByUserId(Long userId, Pageable page);
 
     //select * from tbl_expenses where user_id=? and id=?
     Optional<Expense> findByUserIdAndId(Long userId, Long expenseId);

@@ -11,8 +11,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class UserModel
-{
+public class UserModel {
     @NotBlank(message = "Name should not be empty")
     private String name;
 
@@ -21,8 +20,8 @@ public class UserModel
     private String email;
 
     @NotNull(message = "Password should not be empty")
-    @Size(min=5 ,message = "Password should be atleast five characters")
+    @Size(min = 5, message = "Password should be atleast five characters")
     private String password;
 
-    private Long age=0l;
+    private Long age = 0l;
 }

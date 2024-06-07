@@ -23,20 +23,17 @@ public class UserController {
 //    }
 
     @GetMapping("/profile")
-    public ResponseEntity<User> readUser()
-    {
+    public ResponseEntity<User> readUser() {
         return new ResponseEntity<>(userServiceImpel.readUser(), HttpStatus.OK);
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<User> updateUser(@RequestBody UserModel userModel)
-    {
-        return new ResponseEntity<User>(userServiceImpel.updateUser(userModel),HttpStatus.OK);
+    public ResponseEntity<User> updateUser(@RequestBody UserModel userModel) {
+        return new ResponseEntity<User>(userServiceImpel.updateUser(userModel), HttpStatus.OK);
     }
 
     @DeleteMapping("/deactivate")
-    public ResponseEntity<HttpStatus> deleteUser() throws ResourceNotFoundException
-    {
+    public ResponseEntity<HttpStatus> deleteUser() throws ResourceNotFoundException {
         userServiceImpel.delete();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
