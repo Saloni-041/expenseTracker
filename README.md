@@ -39,4 +39,7 @@ To run the Expense Tracker Application locally, follow these steps:
 3. Access the application:
     - Once the application is running, you can access it using postman.
 
-
+#### Usage
+- Register a new user: Go to the registration page and create a new account.
+- Login:Log in with your credentials to receive a JWT token.
+- Manage Expenses:Use the application to add, view, edit, or delete your expenses.
