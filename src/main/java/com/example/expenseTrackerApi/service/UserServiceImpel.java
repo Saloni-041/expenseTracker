@@ -1,9 +1,11 @@
 package com.example.expenseTrackerApi.service;
 
+import com.example.expenseTrackerApi.entity.Role_Table;
 import com.example.expenseTrackerApi.entity.User;
 import com.example.expenseTrackerApi.entity.UserModel;
 import com.example.expenseTrackerApi.exceptions.ItemAlreadyExistsException;
 import com.example.expenseTrackerApi.exceptions.ResourceNotFoundException;
+import com.example.expenseTrackerApi.repository.RoleRepository;
 import com.example.expenseTrackerApi.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpel implements UserService {
 
@@ -23,6 +29,9 @@ public class UserServiceImpel implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public User createUser(UserModel userModel) {
 
@@ -31,6 +40,18 @@ public class UserServiceImpel implements UserService {
         User newUser = new User();
         BeanUtils.copyProperties(userModel, newUser);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        List<Role_Table> roleTableList=new ArrayList<>();
+        for(Role_Table role:userModel.getRoles())
+        {
+            Role_Table existingRole=roleRepository.findById(role.getId()).
+                    orElseThrow(()->new RuntimeException("Role not found"));
+            roleTableList.add(existingRole);
+        }
+        newUser.setRoles(roleTableList);
+//        newUser.setRoles(userModel.getRoles().stream()
+//                .map(role -> roleRepository.findById(role.getId())
+//                        .orElseThrow(() -> new RuntimeException("Role not found")))
+//                .collect(Collectors.toList()));
         return userRepository.save(newUser);
     }
 

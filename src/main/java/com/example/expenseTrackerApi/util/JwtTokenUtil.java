@@ -5,14 +5,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenUtil {
@@ -26,6 +30,10 @@ public class JwtTokenUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("roles",
+                userDetails.getAuthorities().stream().
+                        map(role-> role.getAuthority()).collect(Collectors.toList()));
+        System.out.println(claims);
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
@@ -33,6 +41,13 @@ public class JwtTokenUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
+    }
+
+    public List<GrantedAuthority> getRolesFromToken(String token)
+    {
+        Claims claims=Jwts.parser().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        List<String> roles=claims.get("roles", List.class);
+        return roles.stream().map(x->new SimpleGrantedAuthority(x)).collect(Collectors.toList());
     }
 
     //functional programming pass function to method arg, and it will return function back
